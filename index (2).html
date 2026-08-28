@@ -1,0 +1,3318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Party Grammar Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ===== Design tokens: "Party Shop at golden hour" ===== */
+  --cream:#FFF8EC;
+  --paper:#FFFDF8;
+  --ink:#2B2140;
+  --ink-soft:#5B5270;
+  --coral:#FF6B6B;
+  --coral-dark:#E14F4F;
+  --magenta:#E84393;
+  --turquoise:#06B6A8;
+  --turquoise-dark:#049185;
+  --sun:#FFC93C;
+  --sun-dark:#F0A500;
+  --grape:#7C5CFC;
+  --grape-dark:#6142E0;
+  --line:#EDE2CE;
+  --shadow: 0 6px 0 rgba(43,33,64,0.12);
+  --shadow-sm: 0 3px 0 rgba(43,33,64,0.12);
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --font-display:'Baloo 2', 'Trebuchet MS', sans-serif;
+  --font-body:'Nunito', 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  background:
+    radial-gradient(circle at 8px 8px, rgba(43,33,64,0.06) 1.4px, transparent 1.4px) 0 0/24px 24px,
+    var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;font-weight:700;}
+button{font-family:var(--font-body);cursor:pointer;}
+button:focus-visible, textarea:focus-visible, input:focus-visible{outline:3px solid var(--grape); outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+}
+.hidden{display:none !important;}
+#app{max-width:1080px;margin:0 auto;padding:16px 16px 48px;}
+
+/* ---------- Top status bar ---------- */
+.status-bar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  background:var(--ink);color:#fff;
+  border-radius:var(--radius-lg);
+  padding:12px 18px;
+  margin-bottom:16px;
+  box-shadow: var(--shadow);
+  position:sticky; top:8px; z-index:40;
+}
+.status-title{
+  font-family:var(--font-display);font-size:1.05rem;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.status-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{
+  background:rgba(255,255,255,0.12);
+  border-radius:999px;
+  padding:6px 12px;
+  font-weight:800;
+  font-size:0.92rem;
+  display:flex;align-items:center;gap:6px;
+  white-space:nowrap;
+}
+.chip.budget-low{background:var(--coral); color:#fff; animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+.level-tabs{display:flex;gap:6px;}
+.level-tab{
+  border:none;background:rgba(255,255,255,0.1);color:#fff;
+  padding:6px 12px;border-radius:999px;font-weight:700;font-size:0.85rem;
+}
+.level-tab.active{background:var(--sun);color:var(--ink);}
+
+/* ---------- Screen scaffolding ---------- */
+.screen{animation:fadeIn 0.35s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{
+  background:var(--paper);
+  border:2px solid var(--line);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);
+}
+.btn{
+  font-family:var(--font-display);
+  font-weight:700;
+  border:none;
+  border-radius:999px;
+  padding:12px 26px;
+  font-size:1rem;
+  color:#fff;
+  background:var(--coral);
+  box-shadow:0 4px 0 var(--coral-dark);
+  transition:transform .08s ease;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--coral-dark);}
+.btn.secondary{background:var(--grape);box-shadow:0 4px 0 var(--grape-dark);}
+.btn.turquoise{background:var(--turquoise);box-shadow:0 4px 0 var(--turquoise-dark);}
+.btn.sun{background:var(--sun);color:var(--ink);box-shadow:0 4px 0 var(--sun-dark);}
+.btn:disabled{opacity:0.45;box-shadow:none;cursor:not-allowed;transform:none;}
+.btn-ghost{
+  font-family:var(--font-body);font-weight:800;background:none;border:2px solid var(--ink);
+  color:var(--ink);border-radius:999px;padding:9px 18px;
+}
+
+/* ---------- Intro screen ---------- */
+.intro{padding:34px 26px;text-align:center;}
+.intro .pennant-row{display:flex;justify-content:center;gap:4px;margin-bottom:6px;font-size:1.4rem;}
+.intro h1{font-size:2.2rem;color:var(--magenta);margin-bottom:6px;}
+.intro .lede{font-size:1.15rem;color:var(--ink-soft);max-width:520px;margin:0 auto 20px;}
+.mission-stats{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin:22px 0;}
+.mission-stat{
+  background:var(--cream);border:2px solid var(--line);border-radius:var(--radius-md);
+  padding:14px 22px;min-width:120px;
+}
+.mission-stat .big{font-family:var(--font-display);font-size:1.6rem;color:var(--grape);}
+.mission-stat .lab{font-size:0.82rem;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+.level-picker{display:flex;justify-content:center;gap:10px;margin:18px 0 26px;flex-wrap:wrap;}
+.level-pick-btn{
+  border:2px solid var(--line);background:var(--paper);border-radius:var(--radius-md);
+  padding:12px 16px;font-family:var(--font-display);font-weight:700;color:var(--ink-soft);
+  min-width:140px;
+}
+.level-pick-btn.active{border-color:var(--grape);background:#F1ECFF;color:var(--grape-dark);}
+.level-pick-btn small{display:block;font-family:var(--font-body);font-weight:600;font-size:0.78rem;margin-top:2px;}
+
+/* ---------- Shop screen ---------- */
+.shop-header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.area-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.area-tab{
+  border:2px solid var(--line);background:var(--paper);border-radius:999px;
+  padding:9px 16px;font-weight:800;font-size:0.92rem;color:var(--ink-soft);
+  display:flex;align-items:center;gap:6px;
+}
+.area-tab.active{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+}
+.area-tab .done-dot{width:8px;height:8px;border-radius:50%;background:var(--turquoise);}
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(150px,1fr));gap:14px;}
+.item-card{
+  background:var(--paper);border:2px solid var(--line);border-radius:var(--radius-md);
+  padding:14px 10px 12px;text-align:center;position:relative;
+  box-shadow:var(--shadow-sm);
+  transition:transform .12s ease;
+}
+.item-card:hover{transform:translateY(-3px);}
+.item-emoji{font-size:2.3rem;display:block;margin-bottom:6px;}
+.item-name{font-weight:800;font-size:0.92rem;line-height:1.2;min-height:2.2em;}
+.item-price{color:var(--turquoise-dark);font-weight:800;margin-top:4px;font-size:0.9rem;}
+.item-count-badge{
+  position:absolute;top:6px;right:6px;background:var(--sun);color:var(--ink);
+  border-radius:999px;font-size:0.72rem;font-weight:800;padding:2px 7px;
+}
+.item-buy-btn{
+  margin-top:8px;width:100%;border:none;border-radius:999px;padding:7px 0;
+  background:var(--coral);color:#fff;font-weight:800;font-size:0.85rem;
+  box-shadow:0 3px 0 var(--coral-dark);
+}
+.item-buy-btn:active{transform:translateY(2px);box-shadow:none;}
+
+.finish-bar{
+  margin-top:22px;padding:16px;border-radius:var(--radius-md);
+  background:linear-gradient(135deg,#F1ECFF,#FFE9F3);
+  border:2px dashed var(--grape);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+}
+
+/* ---------- Situation modal ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(43,33,64,0.55);
+  display:flex;align-items:flex-end;justify-content:center;z-index:100;padding:0;
+}
+@media (min-width:640px){ .overlay{align-items:center;padding:20px;} }
+.situation-modal{
+  background:var(--paper);width:100%;max-width:560px;
+  border-radius:24px 24px 0 0;
+  max-height:92vh;overflow-y:auto;
+  padding:22px 20px 26px;
+  animation:slideUp .28s ease;
+  border:2px solid var(--line);
+}
+@media (min-width:640px){ .situation-modal{border-radius:24px;} }
+@keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.event-badge{
+  display:inline-block;background:var(--sun);color:var(--ink);font-weight:800;
+  font-size:0.75rem;padding:4px 10px;border-radius:999px;margin-bottom:8px;
+}
+.shopkeeper-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
+.shopkeeper-avatar{
+  width:52px;height:52px;border-radius:50%;background:var(--grape);
+  display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;
+  box-shadow:var(--shadow-sm);
+}
+.speech-bubble{
+  background:#F1ECFF;border-radius:16px;padding:12px 14px;position:relative;font-weight:700;
+  color:var(--ink);flex:1;
+}
+.speech-bubble.wrong{background:#FFEAEA;}
+.speech-bubble.right{background:#E4FBF6;}
+.task-line{
+  background:var(--cream);border:2px dashed var(--sun-dark);border-radius:var(--radius-md);
+  padding:12px 14px;font-weight:800;margin-bottom:14px;font-size:1.02rem;
+}
+.answer-box{
+  width:100%;min-height:70px;border:2px solid var(--line);border-radius:var(--radius-md);
+  padding:12px;font-family:var(--font-body);font-size:1rem;resize:vertical;
+}
+.modal-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.hint-box{
+  margin-top:10px;background:#FFF4D9;border-radius:var(--radius-sm);padding:10px 12px;
+  font-size:0.9rem;font-weight:700;color:#7A5B00;
+}
+.fill-blank-sentence{
+  background:var(--cream);border:2px dashed var(--sun-dark);border-radius:var(--radius-md);
+  padding:14px;font-weight:700;font-size:1.05rem;margin-bottom:14px;line-height:1.5;
+}
+.blank-slot{
+  display:inline-block;min-width:70px;border-bottom:3px solid var(--grape);color:var(--grape);
+  font-weight:800;text-align:center;
+}
+.option-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;
+}
+.option-grid.stacked{grid-template-columns:1fr;}
+.option-btn{
+  border:2px solid var(--line);background:var(--paper);border-radius:var(--radius-md);
+  padding:12px 10px;font-family:var(--font-body);font-weight:800;font-size:0.95rem;
+  color:var(--ink);transition:transform .08s ease, border-color .12s ease;
+  box-shadow:0 3px 0 var(--line);
+}
+.option-btn:hover:not(:disabled){border-color:var(--grape);transform:translateY(-1px);}
+.option-btn:active:not(:disabled){transform:translateY(2px);box-shadow:none;}
+.option-btn.wrong{
+  border-color:var(--coral-dark);background:#FFEAEA;color:var(--coral-dark);
+  box-shadow:none;opacity:0.75;text-decoration:line-through;
+}
+.option-btn.correct{
+  border-color:var(--turquoise-dark);background:#E4FBF6;color:var(--turquoise-dark);
+  box-shadow:0 3px 0 var(--turquoise-dark);
+}
+.option-btn.selected{
+  border-color:var(--grape);background:#F1ECFF;box-shadow:0 3px 0 var(--grape-dark);
+}
+.dual-group{margin-bottom:14px;}
+.dual-group-label{
+  font-family:var(--font-display);font-weight:700;color:var(--ink-soft);font-size:0.9rem;
+  margin-bottom:6px;
+}
+.feedback-block{margin-top:14px;border-radius:var(--radius-md);padding:14px;background:#FFEAEA;border:2px solid #FFC9C9;}
+.feedback-block.success{background:#E4FBF6;border-color:#B7EFE4;}
+.feedback-row{margin-bottom:8px;font-size:0.92rem;}
+.feedback-row b{display:block;font-size:0.78rem;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);margin-bottom:2px;}
+.feedback-row .bad-phrase{color:var(--coral-dark);font-weight:800;}
+.feedback-row .good-phrase{color:var(--turquoise-dark);font-weight:800;}
+.close-x{
+  position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.3rem;
+  color:var(--ink-soft);font-weight:800;
+}
+
+/* ---------- Party prep screen ---------- */
+.checklist{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:18px 0;}
+.checklist-item{
+  border:2px solid var(--line);border-radius:var(--radius-md);padding:12px 14px;
+  display:flex;align-items:center;gap:10px;background:var(--paper);
+}
+.checklist-item.done{border-color:var(--turquoise);background:#F0FDFA;}
+.checklist-item .tick{font-size:1.3rem;}
+.clue-list{list-style:none;padding:0;margin:16px 0;}
+.clue-list li{
+  background:#FFF4D9;border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:8px;font-weight:700;color:#7A5B00;
+}
+.party-table{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0;
+  padding:20px;background:linear-gradient(180deg,#FFF3DC,#FFE6C7);border-radius:var(--radius-lg);
+  font-size:2.2rem;min-height:80px;align-items:center;
+}
+
+/* ---------- Final writing ---------- */
+.determiner-tracker{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;}
+.det-pill{
+  border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:800;font-size:0.85rem;color:var(--ink-soft);
+}
+.det-pill.found{border-color:var(--turquoise);background:#E4FBF6;color:var(--turquoise-dark);}
+mark{background:#FFE9A8;border-radius:4px;padding:0 3px;}
+
+/* ---------- Ending screen ---------- */
+.ending{text-align:center;padding:30px 20px;position:relative;overflow:hidden;}
+.confetti-piece{
+  position:absolute;top:-20px;font-size:1.4rem;animation:fall linear forwards;
+}
+@keyframes fall{to{transform:translateY(560px) rotate(340deg);opacity:0.2;}}
+.title-tier{font-size:1.5rem;color:var(--magenta);margin:10px 0 20px;}
+.end-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:20px 0;}
+
+footer.credits{text-align:center;color:var(--ink-soft);font-size:0.8rem;margin-top:30px;}
+@media (max-width:480px){
+  .status-bar{position:static;}
+  .intro h1{font-size:1.7rem;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* =========================================================================
+   GAME DATA: items + situations database
+   ========================================================================= */
+
+const ITEMS = {
+  cake:      { id:'cake', name:'birthday cake', emoji:'🎂', category:'cake', countable:true, price:25,
+               forms:[{text:'cake',plural:false},{text:'cakes',plural:true},{text:'birthday cake',plural:false},{text:'birthday cakes',plural:true}] },
+  pizza:     { id:'pizza', name:'pizza', emoji:'🍕', category:'food', countable:true, price:18,
+               forms:[{text:'pizza',plural:false},{text:'pizzas',plural:true}] },
+  sandwiches:{ id:'sandwiches', name:'sandwiches', emoji:'🥪', category:'food', countable:true, price:12,
+               forms:[{text:'sandwich',plural:false},{text:'sandwiches',plural:true}] },
+  sweets:    { id:'sweets', name:'sweets', emoji:'🍬', category:'food', countable:true, price:6,
+               forms:[{text:'sweet',plural:false},{text:'sweets',plural:true}] },
+  icecream:  { id:'icecream', name:'ice cream', emoji:'🍦', category:'food', countable:false, price:10,
+               forms:[{text:'ice cream',plural:false}] },
+  fruit:     { id:'fruit', name:'fruit', emoji:'🍉', category:'food', countable:false, price:8,
+               forms:[{text:'fruit',plural:false}] },
+  juice:     { id:'juice', name:'juice', emoji:'🧃', category:'drinks', countable:false, price:8,
+               forms:[{text:'juice',plural:false}] },
+  water:     { id:'water', name:'water', emoji:'💧', category:'drinks', countable:false, price:5,
+               forms:[{text:'water',plural:false}] },
+  softdrinks:{ id:'softdrinks', name:'soft drinks', emoji:'🥤', category:'drinks', countable:true, price:9,
+               forms:[{text:'soft drink',plural:false},{text:'soft drinks',plural:true},{text:'can',plural:false},{text:'cans',plural:true}] },
+  plates:    { id:'plates', name:'paper plates', emoji:'🍽️', category:'supplies', countable:true, price:5,
+               forms:[{text:'paper plate',plural:false},{text:'paper plates',plural:true},{text:'plate',plural:false},{text:'plates',plural:true}] },
+  cups:      { id:'cups', name:'paper cups', emoji:'🥤', category:'supplies', countable:true, price:4,
+               forms:[{text:'paper cup',plural:false},{text:'paper cups',plural:true},{text:'cup',plural:false},{text:'cups',plural:true}] },
+  napkins:   { id:'napkins', name:'napkins', emoji:'🧻', category:'supplies', countable:true, price:3,
+               forms:[{text:'napkin',plural:false},{text:'napkins',plural:true}] },
+  forks:     { id:'forks', name:'forks', emoji:'🍴', category:'supplies', countable:true, price:3,
+               forms:[{text:'fork',plural:false},{text:'forks',plural:true}] },
+  balloons:  { id:'balloons', name:'balloons', emoji:'🎈', category:'decorations', countable:true, price:6,
+               forms:[{text:'balloon',plural:false},{text:'balloons',plural:true}] },
+  candles:   { id:'candles', name:'candles', emoji:'🕯️', category:'decorations', countable:true, price:3,
+               forms:[{text:'candle',plural:false},{text:'candles',plural:true}] },
+  partyhats: { id:'partyhats', name:'party hats', emoji:'🎉', category:'decorations', countable:true, price:7,
+               forms:[{text:'party hat',plural:false},{text:'party hats',plural:true},{text:'hat',plural:false},{text:'hats',plural:true}] },
+  banners:   { id:'banners', name:'banners', emoji:'🚩', category:'decorations', countable:true, price:8,
+               forms:[{text:'banner',plural:false},{text:'banners',plural:true}] },
+};
+
+// Pseudo "items" that exist only for grammar-target detection (never shown in the shop grid —
+// they carry no `category`, so they never match an area tab).
+const GRAMMAR_ONLY_NOUNS = {
+  guest:   { id:'guest',   name:'guests',  countable:true, forms:[{text:'guest',plural:false},{text:'guests',plural:true}] },
+  friend:  { id:'friend',  name:'friends', countable:true, forms:[{text:'friend',plural:false},{text:'friends',plural:true}] },
+  packet:  { id:'packet',  name:'packet',  countable:true, forms:[{text:'packet',plural:false},{text:'packets',plural:true}] },
+  pack:    { id:'pack',    name:'pack',    countable:true, forms:[{text:'pack',plural:false},{text:'packs',plural:true}] },
+};
+
+const CATEGORY_META = {
+  cake:        { label:'Cake Counter',      emoji:'🎂' },
+  food:        { label:'Food Corner',       emoji:'🍕' },
+  drinks:      { label:'Drinks Aisle',      emoji:'🥤' },
+  supplies:    { label:'Party Supplies',    emoji:'🍽️' },
+  decorations: { label:'Decoration Station',emoji:'🎈' },
+};
+
+/* ---- Helper factories to keep the situation database compact & consistent ---- */
+function buildHints(item, meaningHint) {
+  const countPhrase = item.countable ? 'countable' : 'uncountable';
+  return [
+    `Is "${item.name}" countable or uncountable?`,
+    `"${item.name}" is ${countPhrase}${item.countable ? ' — it has a plural form.' : ' — it has no plural form.'}`,
+    `Think about the meaning you need: ${meaningHint}`,
+  ];
+}
+
+function S(id, level, itemId, prompt, task, acceptable, meaningHint, exampleAnswer, opts) {
+  opts = opts || {};
+  return Object.assign({
+    id, level, itemId, prompt, task,
+    acceptableDeterminers: acceptable,
+    exampleAnswer,
+    meaningNote: (used) => `"${used}" is grammatically possible, but it doesn't match this situation. ${meaningHint}`,
+    hints: buildHints(ITEMS[itemId], meaningHint),
+  }, opts);
+}
+
+function SDual(id, level, itemId, prompt, task, exampleAnswer, opts) {
+  opts = opts || {};
+  const item = ITEMS[itemId];
+  return Object.assign({
+    id, level, itemId, prompt, task,
+    isDualMention: true,
+    dualExpected: ['zero', 'the'],
+    exampleAnswer,
+    hints: [
+      `Try mentioning "${item.name}" twice — once generally, once about one specific ${item.countable ? 'one' : 'bit of it'}.`,
+      `For the general idea, use no article at all (that's called the zero article).`,
+      `For the one specific ${item.name} both of you can picture, use "the".`,
+    ],
+  }, opts);
+}
+
+const SITUATIONS = [
+  /* ================= LEVEL 1 — EASY ================= */
+  S('l1-cake-a', 1, 'cake',
+    "You only need one birthday cake for the party.",
+    "What would you say to ask for one cake?",
+    ['a'], "You need exactly one — use the article for a single countable item.",
+    "I need a birthday cake."),
+
+  S('l1-juice-some', 1, 'juice',
+    "You want juice for your friends, but you haven't counted an exact amount.",
+    "Ask the shopkeeper for juice.",
+    ['some'], "This is a general, positive request for an uncountable thing — use 'some', not a large- or small-amount word.",
+    "We need some juice."),
+
+  S('l1-balloons-some', 1, 'balloons',
+    "You want balloons to decorate the room. Any reasonable amount is fine to start.",
+    "Ask the shopkeeper for balloons.",
+    ['some'], "This is a general, positive request — 'some' fits both countable and uncountable nouns.",
+    "I'd like some balloons, please."),
+
+  S('l1-water-any', 1, 'water',
+    "You're not sure if the shop sells water at all.",
+    "Ask the shopkeeper a question about water.",
+    ['any'], "Questions about uncountable nouns usually use 'any', not 'some'.",
+    "Do you have any water?"),
+
+  S('l1-candles-many', 1, 'candles',
+    "You want a large number of candles — maybe twenty, for a big decoration.",
+    "Tell the shopkeeper you want a large number of candles.",
+    ['many'], "Candles are countable and plural, and you want a LARGE number.",
+    "I need many candles."),
+
+  S('l1-icecream-much', 1, 'icecream',
+    "You want to know if there's a large amount of ice cream left in the freezer.",
+    "Ask the shopkeeper about the amount of ice cream.",
+    ['much'], "Ice cream is uncountable, and you're asking about a LARGE amount.",
+    "Is there much ice cream left?"),
+
+  S('l1-balloons-few', 1, 'balloons',
+    "You only want three or four balloons — a small number.",
+    "Tell the shopkeeper how many balloons you want.",
+    ['a-few'], "Balloons are countable, and you want a SMALL number — three or four.",
+    "I need a few balloons."),
+
+  S('l1-icecream-little', 1, 'icecream',
+    "You only want a small amount of ice cream — just enough for a taste.",
+    "Tell the shopkeeper how much ice cream you want.",
+    ['a-little'], "Ice cream is uncountable, and you want a SMALL amount.",
+    "I'd like a little ice cream."),
+
+  S('l1-partyhats-each', 1, 'partyhats',
+    "You want one party hat for every single guest, given out one at a time.",
+    "Tell the shopkeeper about giving out party hats to your 8 guests.",
+    ['each', 'every'], "You're thinking of the guests one at a time — that needs a singular noun.",
+    "Each guest needs a party hat.",
+    { grammarItemId: 'guest' }),
+
+  S('l1-candles-every', 1, 'candles',
+    "You want every single candle to match the cake's colour — no exceptions.",
+    "Tell the shopkeeper about the candles matching the cake.",
+    ['every', 'each'], "You mean ALL of them, considered one by one — that needs a singular noun.",
+    "Every candle must match the cake."),
+
+  S('l1-sweets-zero', 1, 'sweets',
+    "You want to tell the shopkeeper that children in general love sweets — not any specific sweets.",
+    "Make a general statement about sweets and children.",
+    ['zero'], "This is a general truth about sweets as a whole category — general plural nouns need no article at all.",
+    "Children love sweets."),
+
+  S('l1-napkins-any', 1, 'napkins',
+    "You tell the shopkeeper you don't have napkins left at home — none at all.",
+    "Tell the shopkeeper about your napkins situation.",
+    ['any'], "This is a negative sentence about a countable plural noun — 'any' fits negatives.",
+    "We don't have any napkins at home."),
+
+  S('l1-sandwiches-many', 1, 'sandwiches',
+    "You look at the shop counter — there's a large number of sandwiches already there.",
+    "Describe how many sandwiches are on the counter.",
+    ['many'], "Sandwiches are countable plural, and there's a LARGE number of them.",
+    "There are many sandwiches on the counter."),
+
+  S('l1-forks-few', 1, 'forks',
+    "You only need a small number of forks — maybe three or four.",
+    "Tell the shopkeeper how many forks you need.",
+    ['a-few'], "Forks are countable, and you want a SMALL number.",
+    "I need a few forks."),
+
+  S('l1-water-little', 1, 'water',
+    "You only want a small amount of water in your cup right now.",
+    "Tell the shopkeeper how much water you want.",
+    ['a-little'], "Water is uncountable, and you want a SMALL amount.",
+    "Can I have a little water?"),
+
+  S('l1-pizza-some', 1, 'pizza',
+    "You want pizza for the party, but you haven't decided the exact number of boxes yet.",
+    "Ask the shopkeeper for pizza.",
+    ['some'], "This is a general, positive request — 'some' works before you've decided an exact amount.",
+    "We need some pizzas."),
+
+  /* ================= LEVEL 2 — INTERMEDIATE ================= */
+  S('l2-cups-fewer', 2, 'cups',
+    "Pack A has a smaller number of cups than Pack B.",
+    "Describe Pack A, comparing the number of cups.",
+    ['fewer'], "Cups are countable, and you're comparing a SMALLER number — countable nouns use 'fewer', not 'less'.",
+    "Pack A has fewer cups.",
+    { eventLabel: 'SPECIAL OFFER' }),
+
+  S('l2-water-less', 2, 'water',
+    "This bottle has a smaller amount of water than that one.",
+    "Compare the two bottles of water.",
+    ['less'], "Water is uncountable, and you're comparing a SMALLER amount — uncountable nouns use 'less', not 'fewer'.",
+    "This bottle has less water."),
+
+  S('l2-juice-enough', 2, 'juice',
+    "You need to check there's a sufficient amount of juice for all 8 guests.",
+    "Tell the shopkeeper about needing a sufficient amount of juice.",
+    ['enough'], "You mean a sufficient amount — not too much, not too little, but ENOUGH.",
+    "We need enough juice for 8 guests.",
+    { eventLabel: 'RUNNING LOW' }),
+
+  S('l2-plates-enough', 2, 'plates',
+    "You need a sufficient number of plates for all 8 guests.",
+    "Tell the shopkeeper about needing enough plates.",
+    ['enough'], "You mean a sufficient number for everyone — that's 'enough'.",
+    "I need enough plates for 8 guests.",
+    { eventLabel: 'RUNNING LOW' }),
+
+  S('l2-balloons-plenty', 2, 'balloons',
+    "The shopkeeper shows you a huge box — there's more than enough balloons here.",
+    "Describe the large, more-than-enough supply of balloons.",
+    ['plenty-of'], "There's a large, generous, more-than-enough amount — that's 'plenty of'.",
+    "There are plenty of balloons here."),
+
+  S('l2-sweets-most', 2, 'sweets',
+    "You think the majority — not all, but most — of your friends love sweets.",
+    "Tell the shopkeeper about your friends and sweets.",
+    ['most'], "You mean the majority, not every single friend — that's 'most'.",
+    "Most guests love sweets.",
+    { grammarItemId: 'guest' }),
+
+  S('l2-cake-another', 2, 'cake',
+    "You already bought one cake, but you'd like one more, just in case.",
+    "Ask for one additional cake.",
+    ['another'], "You want ONE more, in addition to what you already have — that's 'another', followed by a singular noun.",
+    "Can I have another cake?",
+    { eventLabel: 'BUDGET WARNING' }),
+
+  S('l2-candles-another', 2, 'candles',
+    "You used up one packet of candles already. You want one more packet.",
+    "Ask for one more packet of candles.",
+    ['another'], "You want one additional packet — 'another' takes a singular noun.",
+    "I need another packet of candles.",
+    { grammarItemId: 'packet' }),
+
+  S('l2-cake-theother', 2, 'cake',
+    "There are two cakes left on the counter. You don't want the first one — you want the remaining one.",
+    "Ask for the remaining cake.",
+    ['the-other'], "Out of exactly two, you've rejected one, so you mean the specific ONE that remains — that's 'the other'.",
+    "I'll take the other cake.",
+    { eventLabel: 'TWO CHOICES' }),
+
+  S('l2-balloons-both', 2, 'balloons',
+    "There are two balloon colours you like, and you want to buy both of them.",
+    "Tell the shopkeeper you want both colours of balloons.",
+    ['both'], "You want the two of them together, not just one — that's 'both'.",
+    "I'll take both balloons, please.",
+    { eventLabel: 'TWO CHOICES' }),
+
+  S('l2-cake-either', 2, 'cake',
+    "There are two cake flavours, and you genuinely don't mind which one — one of the two is fine.",
+    "Tell the shopkeeper you're happy with one of the two cakes, you don't mind which.",
+    ['either'], "You mean ONE of the two, and it doesn't matter which — that's 'either', with a singular noun.",
+    "Either cake is fine with me."),
+
+  S('l2-cake-neither', 2, 'cake',
+    "You look at two cake designs, and you don't like either one of them.",
+    "Tell the shopkeeper you don't like any of the two cakes.",
+    ['neither'], "You mean NOT ONE of the two — that's 'neither', with a singular noun.",
+    "Neither cake looks right for the party."),
+
+  S('l2-napkins-fewer', 2, 'napkins',
+    "Fewer guests are coming this year, so you need a smaller number of napkins than last time.",
+    "Tell the shopkeeper you need a smaller number of napkins this year.",
+    ['fewer'], "Napkins are countable, and you're comparing a SMALLER number — use 'fewer'.",
+    "I need fewer napkins this year."),
+
+  S('l2-icecream-less', 2, 'icecream',
+    "Because of your budget, you decide you want a smaller amount of ice cream than you first planned.",
+    "Tell the shopkeeper you now want a smaller amount of ice cream.",
+    ['less'], "Ice cream is uncountable, and you're comparing a SMALLER amount — use 'less'.",
+    "I'll take less ice cream this time.",
+    { eventLabel: 'BUDGET WARNING' }),
+
+  S('l2-softdrinks-most', 2, 'softdrinks',
+    "You think that the majority of your friends prefer soft drinks over juice.",
+    "Tell the shopkeeper about your friends' preference for soft drinks.",
+    ['most'], "You mean the majority, not every single friend — that's 'most'.",
+    "Most guests prefer soft drinks.",
+    { grammarItemId: 'guest' }),
+
+  S('l2-forks-enough', 2, 'forks',
+    "You check whether there's a sufficient number of forks for all 8 guests.",
+    "Ask whether there's a sufficient number of forks.",
+    ['enough'], "You mean a sufficient number for everyone — 'enough'.",
+    "Do we have enough forks for 8 guests?",
+    { eventLabel: 'RUNNING LOW' }),
+
+  /* ================= LEVEL 3 — CHALLENGE ================= */
+  SDual('l3-water-dual', 3, 'water',
+    "Talk about water in general (it's important for everyone), then refer to the specific water in the jug on the counter, which has gone warm.",
+    "Pick the correct sentence for each part below.",
+    "Water is important, but the water in that jug is warm."),
+
+  SDual('l3-juice-dual', 3, 'juice',
+    "Talk about juice in general (it's a healthy drink), then refer to the specific juice in that jug, which has gone warm.",
+    "Pick the correct sentence for each part below.",
+    "Juice is healthy, but the juice in that jug is warm."),
+
+  SDual('l3-balloons-dual', 3, 'balloons',
+    "Talk about balloons in general (they're fun to blow up), then refer to the specific balloons in that box, which are all red.",
+    "Pick the correct sentence for each part below.",
+    "Balloons are fun, but the balloons in that box are all red."),
+
+  SDual('l3-sweets-dual', 3, 'sweets',
+    "Talk about sweets in general (children love them), then refer to the specific sweets on that top shelf, which look expensive.",
+    "Pick the correct sentence for each part below.",
+    "Children love sweets, but the sweets on that shelf look expensive."),
+
+  SDual('l3-fruit-dual', 3, 'fruit',
+    "Talk about fruit in general (it's healthy), then refer to the specific fruit in that basket, which looks very fresh.",
+    "Pick the correct sentence for each part below.",
+    "Fruit is healthy, but the fruit in that basket looks very fresh."),
+
+  S('l3-cake-neither', 3, 'cake',
+    "You look closely at two cake designs on offer today, and honestly, you don't like either of them.",
+    "Tell the shopkeeper that not one of the two designs suits your party.",
+    ['neither'], "You mean NOT ONE of exactly two — that's 'neither', with a singular noun.",
+    "Neither cake design is suitable for my party."),
+
+  S('l3-balloons-either', 3, 'balloons',
+    "The shopkeeper offers two balloon packs. Both are fine with you — you'll happily take one of the two.",
+    "Tell the shopkeeper that one of the two balloon packs — you don't mind which — is fine.",
+    ['either'], "You mean ONE of exactly two, and it doesn't matter which — that's 'either', with a singular noun.",
+    "Either balloon pack is fine with me."),
+
+  S('l3-cups-fewer-strict', 3, 'cups',
+    "This box has a smaller number of cups than that box on the shelf.",
+    "Describe the box with the smaller number of cups, using the word for COUNTABLE comparisons.",
+    ['fewer'], "Cups are countable — a smaller NUMBER needs 'fewer', never 'less'.",
+    "This box has fewer cups than that one."),
+
+  S('l3-water-less-strict', 3, 'water',
+    "This jug has a smaller amount of water than that jug on the table.",
+    "Describe the jug with the smaller amount of water, using the word for UNCOUNTABLE comparisons.",
+    ['less'], "Water is uncountable — a smaller AMOUNT needs 'less', never 'fewer'.",
+    "This jug has less water than that one."),
+
+  S('l3-icecream-much-q', 3, 'icecream',
+    "You want to check whether there will be a large amount of ice cream left over after the party.",
+    "Ask whether there will be a large amount of ice cream left.",
+    ['much'], "Ice cream is uncountable, and you're asking about a LARGE amount, in a question — that's 'much'.",
+    "Will there be much ice cream left after the party?"),
+
+  S('l3-candles-all', 3, 'candles',
+    "You want every single candle, considered together as one whole set, to be the same colour — no exceptions.",
+    "Describe the whole set of candles needing to match, talking about them as a group.",
+    ['all', 'all-the'], "You mean the WHOLE set together, not one by one — that's 'all', with a plural noun.",
+    "All the candles must be the same colour."),
+
+  S('l3-pizza-most', 3, 'pizza',
+    "You believe the majority of your friends prefer pizza to sandwiches, though not literally every single one.",
+    "Tell the shopkeeper about your friends' preference for pizza.",
+    ['most'], "You mean the majority, not every single friend — that's 'most'.",
+    "Most guests prefer pizza to sandwiches.",
+    { grammarItemId: 'guest' }),
+
+  S('l3-partyhats-no', 3, 'partyhats',
+    "You check at home and realise you have zero party hats left — none at all.",
+    "Tell the shopkeeper you have zero party hats at home.",
+    ['no'], "You mean ZERO — none at all — that's 'no', with a plural noun.",
+    "I have no party hats left at home.",
+    { eventLabel: 'RUNNING LOW' }),
+
+  S('l3-cake-theother-2', 3, 'cake',
+    "Between the chocolate cake and the vanilla cake, you already chose chocolate a moment ago. Now you're asking about the one that's left.",
+    "Ask about the remaining cake — the one you didn't already pick.",
+    ['the-other'], "Out of exactly two, one is already chosen, so you mean the specific ONE that remains — 'the other'.",
+    "What about the other cake?"),
+
+  S('l3-softdrinks-another', 3, 'softdrinks',
+    "You already finished the first pack of soft drinks. You want one more pack, in addition to that.",
+    "Ask for one more pack of soft drinks.",
+    ['another'], "You want ONE more, in addition to what's already used — 'another', with a singular noun.",
+    "Can I have another pack of soft drinks?",
+    { eventLabel: 'BUDGET WARNING', grammarItemId: 'pack' }),
+
+  S('l3-forks-half', 3, 'forks',
+    "You look at a box of forks and realise you only need half of what's inside — not the whole box.",
+    "Tell the shopkeeper you only need half of the forks in that box.",
+    ['half', 'half-the'], "You mean a PART, exactly 50%, of the whole box — that's 'half'.",
+    "I only need half the forks in that box."),
+
+  S('l3-banners-lotof', 3, 'banners',
+    "You want a large number of banners for the room, and you're speaking casually, the way friends talk.",
+    "Tell the shopkeeper you want a large number of banners, in a casual, spoken way.",
+    ['a-lot-of'], "You want a LARGE number, said in a casual, everyday way — that's 'a lot of', not the more formal 'many'.",
+    "I want a lot of banners for the room."),
+
+  S('l3-water-enough-exact', 3, 'water',
+    "You've worked out exactly how much water 8 guests will need — no more, no less, exactly the sufficient amount.",
+    "Tell the shopkeeper you've calculated exactly the sufficient amount of water for 8 guests.",
+    ['enough'], "You mean the exact sufficient amount, not extra and not too little — that's 'enough'.",
+    "I've calculated enough water for 8 guests."),
+];
+
+/* ---- Coverage top-ups: ensure every item has at least one situation per level ---- */
+SITUATIONS.push(
+  // Level 1 gaps
+  S('l1-fruit-some', 1, 'fruit',
+    "You want fruit for the party, but you haven't decided the exact amount yet.",
+    "Ask the shopkeeper for fruit.",
+    ['some'], "This is a general, positive request for an uncountable thing — use 'some'.",
+    "We need some fruit."),
+
+  S('l1-softdrinks-few', 1, 'softdrinks',
+    "You only want three or four cans of soft drink — a small number.",
+    "Tell the shopkeeper how many soft drinks you want.",
+    ['a-few'], "Soft drinks (cans) are countable, and you want a SMALL number.",
+    "I need a few cans of soft drink."),
+
+  S('l1-plates-many', 1, 'plates',
+    "You look at the shelf — there's a large number of plates already stacked there.",
+    "Describe how many plates are on the shelf.",
+    ['many'], "Plates are countable plural, and there's a LARGE number of them.",
+    "There are many plates on the shelf."),
+
+  S('l1-cups-any', 1, 'cups',
+    "You're not sure if the shop has cups left at all.",
+    "Ask the shopkeeper a question about cups.",
+    ['any'], "Questions about countable plural nouns often use 'any'.",
+    "Do you have any cups?"),
+
+  S('l1-banners-few', 1, 'banners',
+    "You only want three or four banners for the room — a small number.",
+    "Tell the shopkeeper how many banners you want.",
+    ['a-few'], "Banners are countable, and you want a SMALL number.",
+    "I need a few banners."),
+
+  // Level 2 gaps
+  S('l2-pizza-enough', 2, 'pizza',
+    "You need to check there's a sufficient number of pizzas for all 8 guests.",
+    "Ask whether there's a sufficient number of pizzas.",
+    ['enough'], "You mean a sufficient number for everyone — 'enough'.",
+    "Do we have enough pizzas for 8 guests?",
+    { eventLabel: 'RUNNING LOW' }),
+
+  S('l2-sandwiches-fewer', 2, 'sandwiches',
+    "Fewer guests are eating sandwiches than you first thought, so you need a smaller number.",
+    "Tell the shopkeeper you need a smaller number of sandwiches.",
+    ['fewer'], "Sandwiches are countable, and you're comparing a SMALLER number — 'fewer'.",
+    "I need fewer sandwiches than I planned."),
+
+  S('l2-fruit-enough', 2, 'fruit',
+    "You check whether there's a sufficient amount of fruit for all 8 guests.",
+    "Ask whether there's a sufficient amount of fruit.",
+    ['enough'], "You mean a sufficient amount — 'enough' works for uncountable nouns too.",
+    "Is there enough fruit for 8 guests?",
+    { eventLabel: 'RUNNING LOW' }),
+
+  S('l2-partyhats-another', 2, 'partyhats',
+    "You already bought one pack of party hats, but you'd like one more, just in case.",
+    "Ask for one more pack of party hats.",
+    ['another'], "You want one additional pack — 'another' takes a singular noun.",
+    "Can I have another pack of party hats?",
+    { eventLabel: 'BUDGET WARNING', grammarItemId: 'pack' }),
+
+  S('l2-banners-plenty', 2, 'banners',
+    "The shopkeeper shows you a big pile — there's more than enough banners here.",
+    "Describe the large, more-than-enough supply of banners.",
+    ['plenty-of'], "There's a large, generous, more-than-enough amount — 'plenty of'.",
+    "There are plenty of banners here."),
+
+  // Level 3 gaps
+  S('l3-sandwiches-either', 3, 'sandwiches',
+    "There are two sandwich fillings today, and you genuinely don't mind which one — one of the two is fine.",
+    "Tell the shopkeeper that one of the two sandwiches — you don't mind which — is fine.",
+    ['either'], "You mean ONE of exactly two, and it doesn't matter which — 'either', with a singular noun.",
+    "Either sandwich is fine with me."),
+
+  S('l3-plates-all', 3, 'plates',
+    "You want every single plate, considered together as one whole set, to match — no exceptions.",
+    "Describe the whole set of plates needing to match, talking about them as a group.",
+    ['all', 'all-the'], "You mean the WHOLE set together — 'all', with a plural noun.",
+    "All the plates must match each other."),
+
+  SDual('l3-napkins-dual', 3, 'napkins',
+    "Talk about napkins in general (they're useful at every party), then refer to the specific napkins in that packet, which have a birthday print.",
+    "Pick the correct sentence for each part below.",
+    "Napkins are useful at every party, but the napkins in that packet have a birthday print.")
+);
+
+
+/* ---- MCQ data: baked in and validated offline (see generate_mcq.js) ---- */
+const MCQ_DATA = {
+  "l1-cake-a": {
+    "template": "I need ___ birthday cake.",
+    "options": [
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": false
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": false
+      },
+      {
+        "key": "a",
+        "label": "a",
+        "correct": true
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      }
+    ]
+  },
+  "l1-juice-some": {
+    "template": "We need ___ juice.",
+    "options": [
+      {
+        "key": "some",
+        "label": "some",
+        "correct": true
+      },
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": false
+      },
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": false
+      },
+      {
+        "key": "all",
+        "label": "all",
+        "correct": false
+      }
+    ]
+  },
+  "l1-balloons-some": {
+    "template": "I'd like ___ balloons, please.",
+    "options": [
+      {
+        "key": "some",
+        "label": "some",
+        "correct": true
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "half-the",
+        "label": "half the",
+        "correct": false
+      },
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      }
+    ]
+  },
+  "l1-water-any": {
+    "template": "Do you have ___ water?",
+    "options": [
+      {
+        "key": "any",
+        "label": "any",
+        "correct": true
+      },
+      {
+        "key": "most",
+        "label": "most",
+        "correct": false
+      },
+      {
+        "key": "many",
+        "label": "many",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      }
+    ]
+  },
+  "l1-candles-many": {
+    "template": "I need ___ candles.",
+    "options": [
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": false
+      },
+      {
+        "key": "many",
+        "label": "many",
+        "correct": true
+      }
+    ]
+  },
+  "l1-icecream-much": {
+    "template": "Is there ___ ice cream left?",
+    "options": [
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": false
+      },
+      {
+        "key": "most",
+        "label": "most",
+        "correct": false
+      },
+      {
+        "key": "both",
+        "label": "both",
+        "correct": false
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": true
+      }
+    ]
+  },
+  "l1-balloons-few": {
+    "template": "I need ___ balloons.",
+    "options": [
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": true
+      },
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      }
+    ]
+  },
+  "l1-icecream-little": {
+    "template": "I'd like ___ ice cream.",
+    "options": [
+      {
+        "key": "more",
+        "label": "more",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": true
+      },
+      {
+        "key": "most",
+        "label": "most",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      }
+    ]
+  },
+  "l1-partyhats-each": {
+    "template": "___ guest needs a party hat.",
+    "options": [
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": false
+      },
+      {
+        "key": "plenty-of",
+        "label": "plenty of",
+        "correct": false
+      },
+      {
+        "key": "each",
+        "label": "each",
+        "correct": true
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      }
+    ]
+  },
+  "l1-candles-every": {
+    "template": "___ candle must match the cake.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "every",
+        "label": "every",
+        "correct": true
+      },
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": false
+      },
+      {
+        "key": "many",
+        "label": "many",
+        "correct": false
+      }
+    ]
+  },
+  "l1-sweets-zero": {
+    "template": "Children love ___ sweets.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "zero",
+        "label": "(no article/quantifier)",
+        "correct": true
+      },
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      }
+    ]
+  },
+  "l1-napkins-any": {
+    "template": "We don't have ___ napkins at home.",
+    "options": [
+      {
+        "key": "plenty-of",
+        "label": "plenty of",
+        "correct": false
+      },
+      {
+        "key": "any",
+        "label": "any",
+        "correct": true
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      }
+    ]
+  },
+  "l1-sandwiches-many": {
+    "template": "There are ___ sandwiches on the counter.",
+    "options": [
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      },
+      {
+        "key": "many",
+        "label": "many",
+        "correct": true
+      }
+    ]
+  },
+  "l1-forks-few": {
+    "template": "I need ___ forks.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": true
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": false
+      }
+    ]
+  },
+  "l1-water-little": {
+    "template": "Can I have ___ water?",
+    "options": [
+      {
+        "key": "a",
+        "label": "a",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": true
+      },
+      {
+        "key": "any",
+        "label": "any",
+        "correct": false
+      }
+    ]
+  },
+  "l1-pizza-some": {
+    "template": "We need ___ pizzas.",
+    "options": [
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      },
+      {
+        "key": "some",
+        "label": "some",
+        "correct": true
+      },
+      {
+        "key": "more",
+        "label": "more",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      }
+    ]
+  },
+  "l2-cups-fewer": {
+    "template": "Pack A has ___ cups.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": true
+      },
+      {
+        "key": "half",
+        "label": "half",
+        "correct": false
+      }
+    ]
+  },
+  "l2-water-less": {
+    "template": "This bottle has ___ water.",
+    "options": [
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": true
+      },
+      {
+        "key": "either",
+        "label": "either",
+        "correct": false
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": false
+      }
+    ]
+  },
+  "l2-juice-enough": {
+    "template": "We need ___ juice for 8 guests.",
+    "options": [
+      {
+        "key": "both",
+        "label": "both",
+        "correct": false
+      },
+      {
+        "key": "every",
+        "label": "every",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": true
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      }
+    ]
+  },
+  "l2-plates-enough": {
+    "template": "I need ___ plates for 8 guests.",
+    "options": [
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": true
+      }
+    ]
+  },
+  "l2-balloons-plenty": {
+    "template": "There are ___ balloons here.",
+    "options": [
+      {
+        "key": "no",
+        "label": "no",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "plenty-of",
+        "label": "plenty of",
+        "correct": true
+      }
+    ]
+  },
+  "l2-sweets-most": {
+    "template": "___ guests love sweets.",
+    "options": [
+      {
+        "key": "most",
+        "label": "most",
+        "correct": true
+      },
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "every",
+        "label": "every",
+        "correct": false
+      }
+    ]
+  },
+  "l2-cake-another": {
+    "template": "Can I have ___ cake?",
+    "options": [
+      {
+        "key": "another",
+        "label": "another",
+        "correct": true
+      },
+      {
+        "key": "several",
+        "label": "several",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      }
+    ]
+  },
+  "l2-candles-another": {
+    "template": "I need ___ packet of candles.",
+    "options": [
+      {
+        "key": "many",
+        "label": "many",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": true
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      }
+    ]
+  },
+  "l2-cake-theother": {
+    "template": "I'll take ___ cake.",
+    "options": [
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": false
+      },
+      {
+        "key": "all",
+        "label": "all",
+        "correct": false
+      },
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": true
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      }
+    ]
+  },
+  "l2-balloons-both": {
+    "template": "I'll take ___ balloons, please.",
+    "options": [
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      },
+      {
+        "key": "both",
+        "label": "both",
+        "correct": true
+      },
+      {
+        "key": "some",
+        "label": "some",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      }
+    ]
+  },
+  "l2-cake-either": {
+    "template": "___ cake is fine with me.",
+    "options": [
+      {
+        "key": "either",
+        "label": "either",
+        "correct": true
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "several",
+        "label": "several",
+        "correct": false
+      }
+    ]
+  },
+  "l2-cake-neither": {
+    "template": "___ cake looks right for the party.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": true
+      },
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": false
+      },
+      {
+        "key": "more",
+        "label": "more",
+        "correct": false
+      }
+    ]
+  },
+  "l2-napkins-fewer": {
+    "template": "I need ___ napkins this year.",
+    "options": [
+      {
+        "key": "half-the",
+        "label": "half the",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": true
+      }
+    ]
+  },
+  "l2-icecream-less": {
+    "template": "I'll take ___ ice cream this time.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": true
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      },
+      {
+        "key": "some",
+        "label": "some",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      }
+    ]
+  },
+  "l2-softdrinks-most": {
+    "template": "___ guests prefer soft drinks.",
+    "options": [
+      {
+        "key": "all",
+        "label": "all",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "most",
+        "label": "most",
+        "correct": true
+      },
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      }
+    ]
+  },
+  "l2-forks-enough": {
+    "template": "Do we have ___ forks for 8 guests?",
+    "options": [
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": true
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      }
+    ]
+  },
+  "l3-cake-neither": {
+    "template": "___ cake design is suitable for my party.",
+    "options": [
+      {
+        "key": "no",
+        "label": "no",
+        "correct": false
+      },
+      {
+        "key": "many",
+        "label": "many",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": true
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      }
+    ]
+  },
+  "l3-balloons-either": {
+    "template": "___ balloon pack is fine with me.",
+    "options": [
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "either",
+        "label": "either",
+        "correct": true
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": false
+      }
+    ]
+  },
+  "l3-cups-fewer-strict": {
+    "template": "This box has ___ cups than that one.",
+    "options": [
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": true
+      },
+      {
+        "key": "a",
+        "label": "a",
+        "correct": false
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      }
+    ]
+  },
+  "l3-water-less-strict": {
+    "template": "This jug has ___ water than that one.",
+    "options": [
+      {
+        "key": "half",
+        "label": "half",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": true
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": false
+      },
+      {
+        "key": "plenty-of",
+        "label": "plenty of",
+        "correct": false
+      }
+    ]
+  },
+  "l3-icecream-much-q": {
+    "template": "Will there be ___ ice cream left after the party?",
+    "options": [
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": true
+      }
+    ]
+  },
+  "l3-candles-all": {
+    "template": "___ candles must be the same colour.",
+    "options": [
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "several",
+        "label": "several",
+        "correct": false
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": true
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      }
+    ]
+  },
+  "l3-pizza-most": {
+    "template": "___ guests prefer pizza to sandwiches.",
+    "options": [
+      {
+        "key": "most",
+        "label": "most",
+        "correct": true
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      }
+    ]
+  },
+  "l3-partyhats-no": {
+    "template": "I have ___ party hats left at home.",
+    "options": [
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": false
+      },
+      {
+        "key": "no",
+        "label": "no",
+        "correct": true
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      }
+    ]
+  },
+  "l3-cake-theother-2": {
+    "template": "What about ___ cake?",
+    "options": [
+      {
+        "key": "half-the",
+        "label": "half the",
+        "correct": false
+      },
+      {
+        "key": "both",
+        "label": "both",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": true
+      }
+    ]
+  },
+  "l3-softdrinks-another": {
+    "template": "Can I have ___ pack of soft drinks?",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": true
+      },
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": false
+      },
+      {
+        "key": "half",
+        "label": "half",
+        "correct": false
+      }
+    ]
+  },
+  "l3-forks-half": {
+    "template": "I only need ___ forks in that box.",
+    "options": [
+      {
+        "key": "no",
+        "label": "no",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "half-the",
+        "label": "half the",
+        "correct": true
+      },
+      {
+        "key": "either",
+        "label": "either",
+        "correct": false
+      }
+    ]
+  },
+  "l3-banners-lotof": {
+    "template": "I want ___ banners for the room.",
+    "options": [
+      {
+        "key": "a",
+        "label": "a",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": false
+      },
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": true
+      }
+    ]
+  },
+  "l3-water-enough-exact": {
+    "template": "I've calculated ___ water for 8 guests.",
+    "options": [
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": false
+      },
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": true
+      },
+      {
+        "key": "most",
+        "label": "most",
+        "correct": false
+      }
+    ]
+  },
+  "l1-fruit-some": {
+    "template": "We need ___ fruit.",
+    "options": [
+      {
+        "key": "some",
+        "label": "some",
+        "correct": true
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      },
+      {
+        "key": "several",
+        "label": "several",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": false
+      }
+    ]
+  },
+  "l1-softdrinks-few": {
+    "template": "I need ___ cans of soft drink.",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      },
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": true
+      },
+      {
+        "key": "any",
+        "label": "any",
+        "correct": false
+      }
+    ]
+  },
+  "l1-plates-many": {
+    "template": "There are ___ plates on the shelf.",
+    "options": [
+      {
+        "key": "many",
+        "label": "many",
+        "correct": true
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "the",
+        "label": "the",
+        "correct": false
+      }
+    ]
+  },
+  "l1-cups-any": {
+    "template": "Do you have ___ cups?",
+    "options": [
+      {
+        "key": "a",
+        "label": "a",
+        "correct": false
+      },
+      {
+        "key": "much",
+        "label": "much",
+        "correct": false
+      },
+      {
+        "key": "many",
+        "label": "many",
+        "correct": false
+      },
+      {
+        "key": "any",
+        "label": "any",
+        "correct": true
+      }
+    ]
+  },
+  "l1-banners-few": {
+    "template": "I need ___ banners.",
+    "options": [
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "a-few",
+        "label": "a few",
+        "correct": true
+      },
+      {
+        "key": "a",
+        "label": "a",
+        "correct": false
+      },
+      {
+        "key": "most",
+        "label": "most",
+        "correct": false
+      }
+    ]
+  },
+  "l2-pizza-enough": {
+    "template": "Do we have ___ pizzas for 8 guests?",
+    "options": [
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "all",
+        "label": "all",
+        "correct": false
+      },
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      },
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": true
+      }
+    ]
+  },
+  "l2-sandwiches-fewer": {
+    "template": "I need ___ sandwiches than I planned.",
+    "options": [
+      {
+        "key": "fewer",
+        "label": "fewer",
+        "correct": true
+      },
+      {
+        "key": "half-the",
+        "label": "half the",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "neither",
+        "label": "neither",
+        "correct": false
+      }
+    ]
+  },
+  "l2-fruit-enough": {
+    "template": "Is there ___ fruit for 8 guests?",
+    "options": [
+      {
+        "key": "enough",
+        "label": "enough",
+        "correct": true
+      },
+      {
+        "key": "an",
+        "label": "an",
+        "correct": false
+      },
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      }
+    ]
+  },
+  "l2-partyhats-another": {
+    "template": "Can I have ___ pack of party hats?",
+    "options": [
+      {
+        "key": "another",
+        "label": "another",
+        "correct": true
+      },
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "several",
+        "label": "several",
+        "correct": false
+      }
+    ]
+  },
+  "l2-banners-plenty": {
+    "template": "There are ___ banners here.",
+    "options": [
+      {
+        "key": "some",
+        "label": "some",
+        "correct": false
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "another",
+        "label": "another",
+        "correct": false
+      },
+      {
+        "key": "plenty-of",
+        "label": "plenty of",
+        "correct": true
+      }
+    ]
+  },
+  "l3-sandwiches-either": {
+    "template": "___ sandwich is fine with me.",
+    "options": [
+      {
+        "key": "a-lot-of",
+        "label": "a lot of",
+        "correct": false
+      },
+      {
+        "key": "either",
+        "label": "either",
+        "correct": true
+      },
+      {
+        "key": "less",
+        "label": "less",
+        "correct": false
+      },
+      {
+        "key": "both",
+        "label": "both",
+        "correct": false
+      }
+    ]
+  },
+  "l3-plates-all": {
+    "template": "___ plates must match each other.",
+    "options": [
+      {
+        "key": "the-other",
+        "label": "the other",
+        "correct": false
+      },
+      {
+        "key": "each",
+        "label": "each",
+        "correct": false
+      },
+      {
+        "key": "a-little",
+        "label": "a little",
+        "correct": false
+      },
+      {
+        "key": "all-the",
+        "label": "all the",
+        "correct": true
+      }
+    ]
+  }
+};
+const MCQ_DUAL_DATA = {
+  "l3-water-dual": {
+    "part1": {
+      "label": "General idea",
+      "options": [
+        {
+          "text": "Water is important.",
+          "correct": true
+        },
+        {
+          "text": "The water is important.",
+          "correct": false
+        }
+      ]
+    },
+    "part2": {
+      "label": "That one specific jug",
+      "options": [
+        {
+          "text": "The water in that jug is warm.",
+          "correct": true
+        },
+        {
+          "text": "Water in that jug is warm.",
+          "correct": false
+        }
+      ]
+    }
+  },
+  "l3-juice-dual": {
+    "part1": {
+      "label": "General idea",
+      "options": [
+        {
+          "text": "Juice is healthy.",
+          "correct": true
+        },
+        {
+          "text": "The juice is healthy.",
+          "correct": false
+        }
+      ]
+    },
+    "part2": {
+      "label": "That one specific jug",
+      "options": [
+        {
+          "text": "The juice in that jug is warm.",
+          "correct": true
+        },
+        {
+          "text": "Juice in that jug is warm.",
+          "correct": false
+        }
+      ]
+    }
+  },
+  "l3-balloons-dual": {
+    "part1": {
+      "label": "General idea",
+      "options": [
+        {
+          "text": "Balloons are fun.",
+          "correct": true
+        },
+        {
+          "text": "The balloons are fun.",
+          "correct": false
+        }
+      ]
+    },
+    "part2": {
+      "label": "That one specific box",
+      "options": [
+        {
+          "text": "The balloons in that box are all red.",
+          "correct": true
+        },
+        {
+          "text": "Balloons in that box are all red.",
+          "correct": false
+        }
+      ]
+    }
+  },
+  "l3-sweets-dual": {
+    "part1": {
+      "label": "General idea",
+      "options": [
+        {
+          "text": "Children love sweets.",
+          "correct": true
+        },
+        {
+          "text": "Children love the sweets.",
+          "correct": false
+        }
+      ]
+    },
+    "part2": {
+      "label": "Those specific sweets",
+      "options": [
+        {
+          "text": "The sweets on that shelf look expensive.",
+          "correct": true
+        },
+        {
+          "text": "Sweets on that shelf look expensive.",
+          "correct": false
+        }
+      ]
+    }
+  },
+  "l3-fruit-dual": {
+    "part1": {
+      "label": "General idea",
+      "options": [
+        {
+          "text": "Fruit is healthy.",
+          "correct": true
+        },
+        {
+          "text": "The fruit is healthy.",
+          "correct": false
+        }
+      ]
+    },
+    "part2": {
+      "label": "That one specific basket",
+      "options": [
+        {
+          "text": "The fruit in that basket looks very fresh.",
+          "correct": true
+        },
+        {
+          "text": "Fruit in that basket looks very fresh.",
+          "correct": false
+        }
+      ]
+    }
+  },
+  "l3-napkins-dual": {
+    "part1": {
+      "label": "General idea",
+      "options": [
+        {
+          "text": "Napkins are useful at every party.",
+          "correct": true
+        },
+        {
+          "text": "The napkins are useful at every party.",
+          "correct": false
+        }
+      ]
+    },
+    "part2": {
+      "label": "That one specific packet",
+      "options": [
+        {
+          "text": "The napkins in that packet have a birthday print.",
+          "correct": true
+        },
+        {
+          "text": "Napkins in that packet have a birthday print.",
+          "correct": false
+        }
+      ]
+    }
+  }
+};
+SITUATIONS.forEach(function (s) {
+  if (MCQ_DATA[s.id]) s.mcq = MCQ_DATA[s.id];
+  if (MCQ_DUAL_DATA[s.id]) s.mcqDual = MCQ_DUAL_DATA[s.id];
+});
+
+/* =========================================================================
+   BIRTHDAY PARTY GRAMMAR SHOP — CORE GRAMMAR ENGINE
+   Reusable rule-based determiner checker (not string-matching to one answer)
+   ========================================================================= */
+
+// ---- 1. DETERMINER TABLE (from uploaded notes) ----------------------------
+// category: 'countable' | 'uncountable' | 'both' | 'article-a' | 'article-the'
+// numberReq: 'singular' | 'plural' | null (no requirement)
+// meaning: semantic tag used to match a situation's intended meaning
+const DETERMINERS = [
+  // multi-word first (longest match wins)
+  { key: 'a-lot-of',   words: ['a','lot','of'],      category: 'both',        numberReq: null,     meaning: 'large' },
+  { key: 'plenty-of',  words: ['plenty','of'],       category: 'both',        numberReq: null,     meaning: 'large-sufficient' },
+  { key: 'a-little',   words: ['a','little'],        category: 'uncountable', numberReq: null,     meaning: 'small' },
+  { key: 'a-few',      words: ['a','few'],           category: 'countable',   numberReq: 'plural',  meaning: 'small' },
+  { key: 'the-other',  words: ['the','other'],       category: 'both',        numberReq: null,     meaning: 'the-other' },
+  { key: 'all-the',    words: ['all','the'],         category: 'both',        numberReq: null,     meaning: 'totality' },
+  { key: 'half-the',   words: ['half','the'],        category: 'both',        numberReq: null,     meaning: 'half' },
+  { key: 'each',       words: ['each'],              category: 'countable',   numberReq: 'singular',meaning: 'every-individually' },
+  { key: 'every',      words: ['every'],             category: 'countable',   numberReq: 'singular',meaning: 'every-individually' },
+  { key: 'either',     words: ['either'],            category: 'countable',   numberReq: 'singular',meaning: 'one-of-two' },
+  { key: 'neither',    words: ['neither'],           category: 'countable',   numberReq: 'singular',meaning: 'none-of-two' },
+  { key: 'another',    words: ['another'],           category: 'countable',   numberReq: 'singular',meaning: 'additional-one' },
+  { key: 'both',       words: ['both'],              category: 'countable',   numberReq: 'plural',  meaning: 'two-together' },
+  { key: 'several',    words: ['several'],           category: 'countable',   numberReq: 'plural',  meaning: 'moderate' },
+  { key: 'many',       words: ['many'],              category: 'countable',   numberReq: 'plural',  meaning: 'large' },
+  { key: 'much',       words: ['much'],              category: 'uncountable', numberReq: null,     meaning: 'large' },
+  { key: 'fewer',      words: ['fewer'],             category: 'countable',   numberReq: 'plural',  meaning: 'comparison-small' },
+  { key: 'less',       words: ['less'],              category: 'uncountable', numberReq: null,     meaning: 'comparison-small' },
+  { key: 'more',       words: ['more'],              category: 'both',        numberReq: null,     meaning: 'comparison-large' },
+  { key: 'most',       words: ['most'],              category: 'both',        numberReq: null,     meaning: 'majority' },
+  { key: 'all',        words: ['all'],               category: 'both',        numberReq: null,     meaning: 'totality' },
+  { key: 'half',       words: ['half'],              category: 'both',        numberReq: null,     meaning: 'half' },
+  { key: 'no',         words: ['no'],                category: 'both',        numberReq: null,     meaning: 'zero-amount' },
+  { key: 'enough',     words: ['enough'],            category: 'both',        numberReq: null,     meaning: 'sufficient' },
+  { key: 'some',       words: ['some'],              category: 'both',        numberReq: null,     meaning: 'indefinite-positive' },
+  { key: 'any',        words: ['any'],               category: 'both',        numberReq: null,     meaning: 'indefinite-question-negative' },
+  { key: 'the',        words: ['the'],               category: 'article-the', numberReq: null,     meaning: 'specific' },
+  { key: 'an',         words: ['an'],                category: 'article-a',   numberReq: 'singular',meaning: 'general-one' },
+  { key: 'a',          words: ['a'],                 category: 'article-a',   numberReq: 'singular',meaning: 'general-one' },
+];
+// sort longest-first so "a lot of" matches before "a"
+DETERMINERS.sort((a, b) => b.words.length - a.words.length);
+
+const DETERMINER_LABEL = {};
+DETERMINERS.forEach(d => DETERMINER_LABEL[d.key] = d.words.join(' '));
+DETERMINER_LABEL['zero'] = '(no article/quantifier)';
+
+// ---- 2. HELPERS ------------------------------------------------------------
+function tokenize(str) {
+  return str
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/[^a-z0-9'\s]/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function matchDeterminerBefore(tokens, nounStartIdx, earliestIdx) {
+  // Try longest determiner phrases ending exactly at nounStartIdx
+  for (const det of DETERMINERS) {
+    const len = det.words.length;
+    const start = nounStartIdx - len;
+    if (start < earliestIdx) continue;
+    let ok = true;
+    for (let i = 0; i < len; i++) {
+      if (tokens[start + i] !== det.words[i]) { ok = false; break; }
+    }
+    if (ok) return det.key;
+  }
+  return 'zero';
+}
+
+function findNounOccurrences(tokens, item) {
+  // item.forms = [{text:'balloon', plural:false}, {text:'balloons', plural:true}, ...]
+  const occurrences = [];
+  for (let i = 0; i < tokens.length; i++) {
+    for (const form of item.forms) {
+      const formTokens = form.text.split(' ');
+      if (formTokens.length === 1) {
+        if (tokens[i] === formTokens[0]) {
+          occurrences.push({ idx: i, len: 1, plural: form.plural });
+        }
+      } else {
+        let ok = true;
+        for (let j = 0; j < formTokens.length; j++) {
+          if (tokens[i + j] !== formTokens[j]) { ok = false; break; }
+        }
+        if (ok) occurrences.push({ idx: i, len: formTokens.length, plural: form.plural });
+      }
+    }
+  }
+  // de-dup overlapping (prefer longer match already handled by scan order; simple sort+filter)
+  occurrences.sort((a, b) => a.idx - b.idx);
+  const dedup = [];
+  let lastEnd = -1;
+  for (const o of occurrences) {
+    if (o.idx >= lastEnd) { dedup.push(o); lastEnd = o.idx + o.len; }
+  }
+  return dedup;
+}
+
+// ---- 3. RULE TABLES ---------------------------------------------------------
+const COUNTABLE_ONLY = new Set(['a-few', 'many', 'several', 'fewer', 'each', 'every', 'both', 'another', 'either', 'neither', 'a', 'an']);
+const UNCOUNTABLE_ONLY = new Set(['a-little', 'much', 'less']);
+const SINGULAR_REQUIRED = new Set(['a', 'an', 'each', 'every', 'another', 'either', 'neither']);
+const PLURAL_REQUIRED = new Set(['a-few', 'many', 'several', 'fewer', 'both']);
+
+const COUNTABLE_ANALOG = { much: 'many', 'a-little': 'a few', less: 'fewer' };
+const UNCOUNTABLE_ANALOG = { many: 'much', 'a-few': 'a little', fewer: 'less', several: 'a little' };
+
+// ---- 4. MAIN CHECK FUNCTION -------------------------------------------------
+// situation: { itemId, isDualMention, acceptableDeterminers:[...], meaningNote, dualExpected:['zero'|'a'.., 'the'] }
+// item: { id, name, countable, forms:[{text,plural}] }
+function checkGrammar(sentence, situation, item) {
+  const tokens = tokenize(sentence);
+
+  const occurrences = findNounOccurrences(tokens, item);
+
+  if (occurrences.length === 0) {
+    return {
+      correct: false,
+      layer: 'noun-missing',
+      message: `I don't see ${article(item.name)} **${item.name}** mentioned. Try including that word in your sentence.`,
+    };
+  }
+
+  if (situation.isDualMention) {
+    if (occurrences.length < 2) {
+      return {
+        correct: false,
+        layer: 'dual-mention',
+        message: `This task needs you to mention **${item.name}** twice — once generally, and once about a specific one. Try again with two mentions.`,
+      };
+    }
+    const [first, second] = occurrences;
+    const detFirst = matchDeterminerBefore(tokens, first.idx, 0);
+    const detSecond = matchDeterminerBefore(tokens, second.idx, first.idx + first.len);
+
+    const [expectFirst, expectSecond] = situation.dualExpected;
+    const firstOk = detFirst === expectFirst;
+    const secondOk = detSecond === expectSecond;
+
+    if (firstOk && secondOk) {
+      return { correct: true, message: 'Great! You used the general and specific reference correctly.' };
+    }
+    if (!firstOk) {
+      return {
+        correct: false,
+        layer: 'general-specific',
+        problemPhrase: `${DETERMINER_LABEL[detFirst]} ${item.name}`.trim(),
+        message: `When you talk about **${item.name} in general**, we usually use ${expectFirst === 'zero' ? 'no article at all' : `"${DETERMINER_LABEL[expectFirst]}"`}. You wrote "${DETERMINER_LABEL[detFirst]} ${item.name}" for the general idea.`,
+        correctedExample: situation.exampleAnswer,
+      };
+    }
+    return {
+      correct: false,
+      layer: 'general-specific',
+      problemPhrase: `${DETERMINER_LABEL[detSecond]} ${item.name}`.trim(),
+      message: `When you point to **one specific ${item.name}** that both people already know about, use **"the"**. You wrote "${DETERMINER_LABEL[detSecond]} ${item.name}" for the specific one.`,
+      correctedExample: situation.exampleAnswer,
+    };
+  }
+
+  // Single-mention situations: use the first occurrence
+  const noun = occurrences[0];
+  const detKey = matchDeterminerBefore(tokens, noun.idx, 0);
+  const detDef = DETERMINERS.find(d => d.key === detKey);
+  const nounForm = noun.plural ? 'plural' : 'singular';
+
+  // Layer: countability
+  if (!item.countable && COUNTABLE_ONLY.has(detKey)) {
+    const suggestion = COUNTABLE_ANALOG[detKey] || 'a little / much';
+    return {
+      correct: false,
+      layer: 'countability',
+      problemPhrase: `${DETERMINER_LABEL[detKey]} ${item.name}`,
+      message: `**${capitalize(item.name)}** is uncountable. We don't use "${DETERMINER_LABEL[detKey]}" with uncountable nouns — try **"${suggestion}"** instead.`,
+      correctedExample: situation.exampleAnswer,
+    };
+  }
+  if (item.countable && UNCOUNTABLE_ONLY.has(detKey)) {
+    const suggestion = UNCOUNTABLE_ANALOG[detKey] || 'a few / many';
+    return {
+      correct: false,
+      layer: 'countability',
+      problemPhrase: `${DETERMINER_LABEL[detKey]} ${item.name}`,
+      message: `**${capitalize(item.name)}** is countable. "${DETERMINER_LABEL[detKey]}" is used with uncountable nouns — try **"${suggestion}"** instead.`,
+      correctedExample: situation.exampleAnswer,
+    };
+  }
+
+  // Layer: number agreement (countable nouns only)
+  if (item.countable) {
+    if (SINGULAR_REQUIRED.has(detKey) && nounForm === 'plural') {
+      return {
+        correct: false,
+        layer: 'agreement',
+        problemPhrase: `${DETERMINER_LABEL[detKey]} ${item.name}`,
+        message: `"${DETERMINER_LABEL[detKey]}" is followed by a **singular** noun. Try "${DETERMINER_LABEL[detKey]} ${singularOf(item)}" instead.`,
+        correctedExample: situation.exampleAnswer,
+      };
+    }
+    if (PLURAL_REQUIRED.has(detKey) && nounForm === 'singular') {
+      return {
+        correct: false,
+        layer: 'agreement',
+        problemPhrase: `${DETERMINER_LABEL[detKey]} ${item.name}`,
+        message: `"${DETERMINER_LABEL[detKey]}" is followed by a **plural** noun. Try "${DETERMINER_LABEL[detKey]} ${pluralOf(item)}" instead.`,
+        correctedExample: situation.exampleAnswer,
+      };
+    }
+  }
+
+  // Layer: meaning match against situation intent
+  if (situation.acceptableDeterminers.includes(detKey)) {
+    return { correct: true, message: null };
+  }
+
+  // grammatically fine, but not what the situation asked for
+  return {
+    correct: false,
+    layer: 'meaning',
+    problemPhrase: `${DETERMINER_LABEL[detKey]} ${item.name}`,
+    message: situation.meaningNote
+      ? situation.meaningNote(DETERMINER_LABEL[detKey])
+      : `"${DETERMINER_LABEL[detKey]}" is grammatically fine, but it doesn't match what this situation needs.`,
+    correctedExample: situation.exampleAnswer,
+  };
+}
+
+function article(word) {
+  return /^[aeiou]/i.test(word) ? 'an' : 'a';
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function singularOf(item) { const f = item.forms.find(f => !f.plural); return f ? f.text : item.name; }
+function pluralOf(item) { const f = item.forms.find(f => f.plural); return f ? f.text : item.name; }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    checkGrammar, DETERMINERS, DETERMINER_LABEL, tokenize,
+    findNounOccurrences, matchDeterminerBefore,
+  };
+}
+
+/* =========================================================================
+   BIRTHDAY PARTY GRAMMAR SHOP — GAME LOGIC & RENDERING
+   ========================================================================= */
+(function () {
+  const ALL_NOUNS = Object.assign({}, ITEMS, GRAMMAR_ONLY_NOUNS);
+
+  /* ---------------- STATE ---------------- */
+  const state = {
+    screen: 'intro',           // intro | shop | party-prep | final-writing | ending
+    level: 1,
+    budget: 100,
+    stars: 0,
+    basket: [],                 // {itemId, qty}
+    purchaseCounts: {},         // itemId -> count
+    currentArea: 'cake',
+    usedSituations: {},         // "itemId|level" -> [used situation ids]
+    activeSituation: null,      // situation currently open in modal
+    activeItem: null,
+    attempts: 0,
+    hintLevel: 0,
+    lastFeedback: null,
+    determinersUsedInWriting: [],
+    finalParagraph: '',
+  };
+
+  function purchaseCount(itemId) { return state.purchaseCounts[itemId] || 0; }
+  function categoryCount(cat) {
+    return Object.keys(ITEMS).filter(id => ITEMS[id].category === cat)
+      .reduce((sum, id) => sum + purchaseCount(id), 0);
+  }
+  function categoryDistinctBought(cat) {
+    return Object.keys(ITEMS).filter(id => ITEMS[id].category === cat && purchaseCount(id) > 0).length;
+  }
+
+  const REQUIREMENTS = {
+    cake:        () => purchaseCount('cake') >= 1,
+    food:        () => categoryCount('food') >= 2,
+    drinks:      () => categoryCount('drinks') >= 2,
+    supplies:    () => purchaseCount('plates') >= 1 && purchaseCount('cups') >= 1,
+    decorations: () => categoryCount('decorations') >= 2,
+  };
+  function allRequirementsMet() {
+    return Object.values(REQUIREMENTS).every(fn => fn());
+  }
+
+  /* ---------------- SITUATION SELECTION ---------------- */
+  function pickSituation(itemId, level) {
+    const pool = SITUATIONS.filter(s => s.itemId === itemId && s.level === level);
+    if (pool.length === 0) return null;
+    const key = itemId + '|' + level;
+    const used = state.usedSituations[key] || [];
+    let candidates = pool.filter(s => used.indexOf(s.id) === -1);
+    if (candidates.length === 0) {
+      state.usedSituations[key] = [];
+      candidates = pool;
+    }
+    const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+    state.usedSituations[key] = (state.usedSituations[key] || []).concat([chosen.id]);
+    return chosen;
+  }
+
+  /* ---------------- RENDER ROOT ---------------- */
+  const app = document.getElementById('app');
+
+  function render() {
+    let html = '';
+    if (state.screen !== 'intro' && state.screen !== 'ending') html += renderStatusBar();
+    if (state.screen === 'intro') html += renderIntro();
+    else if (state.screen === 'shop') html += renderShop();
+    else if (state.screen === 'party-prep') html += renderPartyPrep();
+    else if (state.screen === 'final-writing') html += renderFinalWriting();
+    else if (state.screen === 'ending') html += renderEnding();
+    html += renderFooter();
+    app.innerHTML = html;
+
+    if (state.activeSituation) {
+      renderSituationModal();
+    } else {
+      const stale = document.getElementById('situation-overlay');
+      if (stale) stale.remove();
+    }
+    attachGlobalHandlers();
+  }
+
+  function renderFooter() {
+    return `<footer class="credits">Birthday Party Grammar Shop 🎈 — practise determiners by planning a party</footer>`;
+  }
+
+  /* ---------------- STATUS BAR ---------------- */
+  function renderStatusBar() {
+    const budgetLowClass = state.budget <= 20 ? ' budget-low' : '';
+    const levels = [
+      { id: 1, label: 'Easy' },
+      { id: 2, label: 'Intermediate' },
+      { id: 3, label: 'Challenge' },
+    ];
+    return `
+    <div class="status-bar">
+      <div class="status-title">🎉 Party Grammar Shop</div>
+      <div class="status-chips">
+        <span class="chip${budgetLowClass}">💰 RM${state.budget}</span>
+        <span class="chip">⭐ ${state.stars}</span>
+        <span class="chip">🛒 ${state.basket.length}</span>
+        <span class="chip">👥 8 guests</span>
+      </div>
+      <div class="level-tabs">
+        ${levels.map(l => `<button class="level-tab${l.id === state.level ? ' active' : ''}" data-action="setLevel" data-level="${l.id}">${l.label}</button>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  /* ---------------- INTRO SCREEN ---------------- */
+  function renderIntro() {
+    return `
+    <div class="screen intro">
+      <div class="pennant-row">🎈🎉🎈🎂🎈🎉🎈</div>
+      <h1>🎂 Your Mission</h1>
+      <p class="lede">Your birthday party starts in two hours! 8 friends are coming, and the party shop is waiting. Talk to the shopkeeper using great English to fill your basket.</p>
+      <div class="mission-stats">
+        <div class="mission-stat"><div class="big">RM100</div><div class="lab">Budget</div></div>
+        <div class="mission-stat"><div class="big">8</div><div class="lab">Guests</div></div>
+        <div class="mission-stat"><div class="big">🛒 0</div><div class="lab">Basket</div></div>
+      </div>
+      <h3 style="margin-bottom:10px;color:var(--ink-soft);font-family:var(--font-body);font-weight:800;font-size:0.95rem;">Choose your challenge level</h3>
+      <div class="level-picker">
+        <button class="level-pick-btn${state.level===1?' active':''}" data-action="setLevel" data-level="1">Easy<small>a/an, some/any, few/little</small></button>
+        <button class="level-pick-btn${state.level===2?' active':''}" data-action="setLevel" data-level="2">Intermediate<small>fewer/less, enough, both, another</small></button>
+        <button class="level-pick-btn${state.level===3?' active':''}" data-action="setLevel" data-level="3">Challenge<small>general vs specific, mixed</small></button>
+      </div>
+      <button class="btn" data-action="startShopping">LET'S GET READY! 🎈</button>
+    </div>`;
+  }
+
+  /* ---------------- SHOP SCREEN ---------------- */
+  function renderShop() {
+    const areas = ['cake', 'food', 'drinks', 'supplies', 'decorations'];
+    const tabsHtml = areas.map(a => {
+      const meta = CATEGORY_META[a];
+      const done = REQUIREMENTS[a]();
+      return `<button class="area-tab${state.currentArea === a ? ' active' : ''}" data-action="setArea" data-area="${a}">
+        ${meta.emoji} ${meta.label} ${done ? '<span class="done-dot"></span>' : ''}
+      </button>`;
+    }).join('');
+
+    const itemsInArea = Object.values(ITEMS).filter(it => it.category === state.currentArea);
+    const itemsHtml = itemsInArea.map(it => {
+      const count = purchaseCount(it.id);
+      return `
+      <div class="item-card">
+        ${count > 0 ? `<span class="item-count-badge">×${count}</span>` : ''}
+        <span class="item-emoji">${it.emoji}</span>
+        <div class="item-name">${capitalize(it.name)}</div>
+        <div class="item-price">RM${it.price}</div>
+        <button class="item-buy-btn" data-action="openItem" data-item="${it.id}">${count > 0 ? 'Buy more' : 'Talk & Buy'}</button>
+      </div>`;
+    }).join('');
+
+    const ready = allRequirementsMet();
+    const missing = Object.keys(REQUIREMENTS).filter(k => !REQUIREMENTS[k]());
+    const MISSING_LABEL = { cake: 'a cake', food: 'more food', drinks: 'more drinks', supplies: 'plates & cups', decorations: 'more decorations' };
+
+    return `
+    <div class="screen">
+      <div class="shop-header">
+        <h2>🛍️ Party Shop</h2>
+      </div>
+      <div class="area-tabs">${tabsHtml}</div>
+      <div class="item-grid">${itemsHtml}</div>
+      <div class="finish-bar">
+        <div>
+          ${ready
+            ? '<strong>🎉 You have everything you need!</strong>'
+            : `<strong>Still needed:</strong> ${missing.map(m => MISSING_LABEL[m] || m).join(', ')}`}
+        </div>
+        <button class="btn secondary" data-action="checkParty" ${ready ? '' : 'disabled'}>🎉 CHECK MY PARTY</button>
+      </div>
+    </div>`;
+  }
+
+  /* ---------------- SITUATION MODAL ---------------- */
+  function shuffleArr(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function openItem(itemId) {
+    const situation = pickSituation(itemId, state.level);
+    if (!situation) {
+      // Defensive fallback: shouldn't happen (every item is covered at every level),
+      // but if content is ever edited and a gap appears, don't fail silently.
+      state.activeItem = itemId;
+      state.activeSituation = {
+        itemId, prompt: "Hmm, I don't have a task for this item at this level right now — try another level or item!",
+        task: 'Try a different level using the tabs above, or pick another item.',
+        acceptableDeterminers: [], exampleAnswer: '', hints: [], noTask: true,
+      };
+      render();
+      return;
+    }
+    state.activeItem = itemId;
+    state.activeSituation = situation;
+    state.attempts = 0;
+    state.hintLevel = 0;
+    state.lastFeedback = null;
+    state.wrongIndices = [];
+    state.dualWrongCombos = [];
+    if (situation.isDualMention) {
+      state.dualOptions1 = shuffleArr(situation.mcqDual.part1.options);
+      state.dualOptions2 = shuffleArr(situation.mcqDual.part2.options);
+      state.dualSelected1 = null;
+      state.dualSelected2 = null;
+    } else if (situation.mcq) {
+      state.mcqOptionsShuffled = shuffleArr(situation.mcq.options);
+    }
+    render();
+  }
+
+  function renderSituationModal() {
+    const s = state.activeSituation;
+    const item = ITEMS[state.activeItem];
+    const existing = document.getElementById('situation-overlay');
+    if (existing) existing.remove();
+
+    if (s.noTask) {
+      const overlay = document.createElement('div');
+      overlay.id = 'situation-overlay';
+      overlay.className = 'overlay';
+      overlay.innerHTML = `
+        <div class="situation-modal">
+          <button class="close-x" data-action="closeSituation" aria-label="Close">✕</button>
+          <div class="shopkeeper-row">
+            <div class="shopkeeper-avatar">🧑‍🌾</div>
+            <div class="speech-bubble">${s.prompt}</div>
+          </div>
+          <div class="task-line">${s.task}</div>
+          <div class="modal-actions"><button class="btn" data-action="closeSituation">OK</button></div>
+        </div>`;
+      document.body.appendChild(overlay);
+      return;
+    }
+
+    const feedback = state.lastFeedback;
+    let feedbackHtml = '';
+    if (feedback) {
+      if (feedback.correct) {
+        feedbackHtml = `
+        <div class="feedback-block success">
+          <div class="feedback-row"><b>Shopkeeper says</b>Perfect! I've added ${item.emoji} ${item.name} to your basket.</div>
+        </div>`;
+      } else {
+        feedbackHtml = `
+        <div class="feedback-block">
+          <div class="feedback-row"><b>You chose</b>${escapeHtml(state.lastSentence || '')}</div>
+          ${feedback.problemPhrase ? `<div class="feedback-row"><b>Look at this part</b><span class="bad-phrase">"${escapeHtml(feedback.problemPhrase)}"</span></div>` : ''}
+          <div class="feedback-row"><b>Why?</b>${mdBold(feedback.message)}</div>
+          <div class="feedback-row"><b>Better version</b><span class="good-phrase">${escapeHtml(feedback.correctedExample || s.exampleAnswer)}</span></div>
+        </div>`;
+      }
+    }
+
+    const hintHtml = state.hintLevel > 0
+      ? `<div class="hint-box">💡 ${s.hints[state.hintLevel - 1]}</div>`
+      : '';
+
+    let bodyHtml;
+    if (s.isDualMention) {
+      bodyHtml = renderDualQuestion(s, feedback);
+    } else {
+      bodyHtml = renderSingleQuestion(s, feedback);
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'situation-overlay';
+    overlay.className = 'overlay';
+    overlay.innerHTML = `
+      <div class="situation-modal">
+        <button class="close-x" data-action="closeSituation" aria-label="Close">✕</button>
+        ${s.eventLabel ? `<span class="event-badge">${s.eventLabel}</span>` : ''}
+        <div class="shopkeeper-row">
+          <div class="shopkeeper-avatar">🧑‍🌾</div>
+          <div class="speech-bubble${feedback ? (feedback.correct ? ' right' : ' wrong') : ''}">${s.prompt}</div>
+        </div>
+        <div class="task-line">${s.task}</div>
+        ${bodyHtml}
+        ${hintHtml}
+        <div class="modal-actions">
+          <button class="btn-ghost" data-action="showHint">💡 Hint</button>
+        </div>
+        ${feedbackHtml}
+        ${feedback && feedback.correct ? `<div class="modal-actions"><button class="btn turquoise" data-action="closeSituation">Continue shopping →</button></div>` : ''}
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  }
+
+  function renderSingleQuestion(s, feedback) {
+    const options = state.mcqOptionsShuffled || [];
+    const templateHtml = escapeHtml(s.mcq.template).replace('___', '<span class="blank-slot">____</span>');
+    const optionsHtml = options.map((opt, idx) => {
+      const isWrong = (state.wrongIndices || []).indexOf(idx) !== -1;
+      const isRight = feedback && feedback.correct && state.lastPickedIdx === idx;
+      let cls = 'option-btn';
+      if (isWrong) cls += ' wrong';
+      if (isRight) cls += ' correct';
+      return `<button class="${cls}" data-action="selectOption" data-idx="${idx}" ${isWrong ? 'disabled' : ''}>${escapeHtml(opt.label)}</button>`;
+    }).join('');
+    return `
+      <div class="fill-blank-sentence">${templateHtml}</div>
+      <div class="option-grid">${optionsHtml}</div>
+    `;
+  }
+
+  function renderDualQuestion(s, feedback) {
+    function group(partNum, def, options, selectedIdx) {
+      const optsHtml = options.map((opt, idx) => {
+        const selected = selectedIdx === idx;
+        return `<button class="option-btn dual-opt${selected ? ' selected' : ''}" data-action="selectDualOption" data-part="${partNum}" data-idx="${idx}">${escapeHtml(opt.text)}</button>`;
+      }).join('');
+      return `
+        <div class="dual-group">
+          <div class="dual-group-label">${def.label}</div>
+          <div class="option-grid stacked">${optsHtml}</div>
+        </div>`;
+    }
+    const g1 = group(1, s.mcqDual.part1, state.dualOptions1, state.dualSelected1);
+    const g2 = group(2, s.mcqDual.part2, state.dualOptions2, state.dualSelected2);
+    const bothSelected = state.dualSelected1 !== null && state.dualSelected2 !== null;
+    return `
+      ${g1}
+      ${g2}
+      <div class="modal-actions">
+        <button class="btn" data-action="checkDualAnswer" ${bothSelected ? '' : 'disabled'}>Check My Grammar ✓</button>
+      </div>
+    `;
+  }
+
+  function showHint() {
+    const s = state.activeSituation;
+    if (state.hintLevel < s.hints.length) state.hintLevel++;
+    render();
+  }
+
+  function awardResult(result) {
+    state.attempts++;
+    if (result.correct) {
+      const shopItem = ITEMS[state.activeItem];
+      state.budget -= shopItem.price;
+      state.purchaseCounts[shopItem.id] = purchaseCount(shopItem.id) + 1;
+      state.basket.push({ itemId: shopItem.id, price: shopItem.price });
+      const earned = state.attempts === 1 ? 3 : state.attempts === 2 ? 2 : 1;
+      state.stars += earned;
+      state.lastFeedback = { correct: true, starsEarned: earned };
+    } else {
+      state.lastFeedback = result;
+    }
+    render();
+  }
+
+  function selectOption(idxStr) {
+    const idx = parseInt(idxStr, 10);
+    const s = state.activeSituation;
+    const opt = state.mcqOptionsShuffled[idx];
+    const sentence = s.mcq.template.replace('___', opt.label);
+    state.lastSentence = sentence;
+    state.lastPickedIdx = idx;
+    const item = ALL_NOUNS[s.grammarItemId || s.itemId];
+    const result = checkGrammar(sentence, s, item);
+    if (!result.correct) {
+      state.wrongIndices = (state.wrongIndices || []).concat([idx]);
+    }
+    awardResult(result);
+  }
+
+  function selectDualOption(partStr, idxStr) {
+    const part = parseInt(partStr, 10);
+    const idx = parseInt(idxStr, 10);
+    if (part === 1) state.dualSelected1 = idx; else state.dualSelected2 = idx;
+    render();
+  }
+
+  function checkDualAnswer() {
+    const s = state.activeSituation;
+    if (state.dualSelected1 === null || state.dualSelected2 === null) return;
+    const opt1 = state.dualOptions1[state.dualSelected1];
+    const opt2 = state.dualOptions2[state.dualSelected2];
+    const combined = opt1.text + ' ' + opt2.text;
+    state.lastSentence = combined;
+    const item = ALL_NOUNS[s.grammarItemId || s.itemId];
+    const result = checkGrammar(combined, s, item);
+    awardResult(result);
+  }
+
+  function closeSituation() {
+    state.activeSituation = null;
+    state.activeItem = null;
+    state.lastSentence = '';
+    state.lastFeedback = null;
+    state.wrongIndices = [];
+    state.mcqOptionsShuffled = null;
+    state.dualOptions1 = null;
+    state.dualOptions2 = null;
+    state.dualSelected1 = null;
+    state.dualSelected2 = null;
+    state.lastPickedIdx = null;
+    render();
+  }
+
+  /* ---------------- PARTY PREP SCREEN ---------------- */
+  function renderPartyPrep() {
+    const checklistDefs = [
+      { key: 'cake', label: 'Birthday Cake', emoji: '🎂' },
+      { key: 'food', label: 'Food', emoji: '🍕' },
+      { key: 'drinks', label: 'Drinks', emoji: '🥤' },
+      { key: 'supplies', label: 'Plates & Cups', emoji: '🍽️' },
+      { key: 'decorations', label: 'Decorations', emoji: '🎈' },
+    ];
+    const checklistHtml = checklistDefs.map(c => {
+      const done = REQUIREMENTS[c.key]();
+      return `<div class="checklist-item${done ? ' done' : ''}"><span class="tick">${done ? '✅' : '⬜'}</span> ${c.emoji} ${c.label}</div>`;
+    }).join('');
+
+    const clues = [];
+    if (!REQUIREMENTS.cake()) clues.push("Where's the birthday cake? 🎂 A party isn't complete without one!");
+    if (!REQUIREMENTS.food()) clues.push('Your guests will be hungry — buy a bit more food! 🍕');
+    if (!REQUIREMENTS.drinks()) clues.push('Your guests have arrived, but is there enough to drink for 8 friends? 🥤');
+    if (purchaseCount('plates') < 1) clues.push('You invited 8 friends but have no plates yet — what will they eat from? 🍽️');
+    if (purchaseCount('cups') < 1) clues.push('Your guests have drinks, but what will they drink from? 🥤');
+    if (!REQUIREMENTS.decorations()) clues.push('The room looks a little plain — a few more decorations would help! 🎈');
+
+    const tableEmojis = [];
+    if (purchaseCount('cake') > 0) tableEmojis.push('🎂');
+    ['pizza', 'sandwiches', 'sweets', 'icecream', 'fruit'].forEach(id => { for (let i = 0; i < purchaseCount(id); i++) tableEmojis.push(ITEMS[id].emoji); });
+    ['juice', 'water', 'softdrinks'].forEach(id => { for (let i = 0; i < purchaseCount(id); i++) tableEmojis.push(ITEMS[id].emoji); });
+    ['plates', 'cups', 'napkins', 'forks'].forEach(id => { for (let i = 0; i < purchaseCount(id); i++) tableEmojis.push(ITEMS[id].emoji); });
+    ['balloons', 'candles', 'partyhats', 'banners'].forEach(id => { for (let i = 0; i < purchaseCount(id); i++) tableEmojis.push(ITEMS[id].emoji); });
+
+    const ready = allRequirementsMet();
+
+    return `
+    <div class="screen">
+      <div class="card" style="padding:24px;">
+        <h2 style="color:var(--magenta);margin-bottom:6px;">🏠 Party Preparation Room</h2>
+        <p style="color:var(--ink-soft);font-weight:700;margin-top:0;">Let's see how your party is looking...</p>
+        <div class="party-table">${tableEmojis.length ? tableEmojis.join(' ') : '<span style="font-size:1rem;color:var(--ink-soft);">Nothing here yet — go shopping!</span>'}</div>
+        <div class="checklist">${checklistHtml}</div>
+        ${clues.length ? `<ul class="clue-list">${clues.map(c => `<li>${c}</li>`).join('')}</ul>` : ''}
+        <div class="modal-actions">
+          <button class="btn-ghost" data-action="backToShop">← Back to Shop</button>
+          <button class="btn secondary" data-action="goToWriting" ${ready ? '' : 'disabled'}>Continue to Final Mission →</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  /* ---------------- FINAL WRITING SCREEN ---------------- */
+  function renderFinalWriting() {
+    const analysis = state.writingAnalysis;
+    return `
+    <div class="screen">
+      <div class="card" style="padding:24px;">
+        <h2 style="color:var(--magenta);">📝 Tell Your Friend About the Party</h2>
+        <p style="color:var(--ink-soft);font-weight:700;">Write 4–5 sentences about your party plan. Use at least <strong>five different determiners</strong> (a, some, enough, a few, each, both...).</p>
+        <textarea class="answer-box" id="final-textarea" style="min-height:150px;" placeholder="I bought a birthday cake and some juice...">${escapeHtml(state.finalParagraph)}</textarea>
+        <div class="modal-actions">
+          <button class="btn" data-action="checkFinalWriting">Check My Writing ✓</button>
+        </div>
+        ${analysis ? renderWritingAnalysis(analysis) : ''}
+        ${analysis && analysis.pass ? `<div class="modal-actions"><button class="btn secondary" data-action="goToEnding">See My Party! 🎉</button></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  function renderWritingAnalysis(analysis) {
+    const pillsHtml = analysis.found.map(d => `<span class="det-pill found">✅ ${DETERMINER_LABEL[d]}</span>`).join('');
+    return `
+    <div class="feedback-block ${analysis.pass ? 'success' : ''}" style="margin-top:16px;">
+      <div class="feedback-row"><b>Your paragraph, with determiners highlighted</b></div>
+      <p>${analysis.highlighted}</p>
+      <div class="feedback-row" style="margin-top:10px;"><b>Determiners used successfully</b></div>
+      <div class="determiner-tracker">${pillsHtml || '<span style="color:var(--ink-soft);">None found yet</span>'}</div>
+      ${!analysis.pass ? `<div class="feedback-row" style="margin-top:10px;">You found <strong>${analysis.found.length}</strong> so far — you need at least <strong>5 different</strong> ones. Try adding more!</div>` : `<div class="feedback-row" style="margin-top:10px;color:var(--turquoise-dark);font-weight:800;">🎉 Great job! You used ${analysis.found.length} different determiners correctly.</div>`}
+    </div>`;
+  }
+
+  function checkFinalWriting() {
+    const ta = document.getElementById('final-textarea');
+    const paragraph = ta ? ta.value.trim() : '';
+    state.finalParagraph = paragraph;
+    const analysis = analyzeWriting(paragraph);
+    state.writingAnalysis = analysis;
+    render();
+  }
+
+  function analyzeWriting(paragraph) {
+    const tokens = tokenize(paragraph);
+    const found = [];
+    for (let i = 0; i < tokens.length; i++) {
+      for (const det of DETERMINERS) {
+        const len = det.words.length;
+        if (i + len > tokens.length) continue;
+        let ok = true;
+        for (let j = 0; j < len; j++) if (tokens[i + j] !== det.words[j]) { ok = false; break; }
+        if (ok) {
+          if (found.indexOf(det.key) === -1) found.push(det.key);
+          break;
+        }
+      }
+    }
+    // Build highlighted HTML in a single pass: one combined regex, longest phrases
+    // first, so "a few" is matched whole rather than re-matching the lone "a" inside it.
+    const sortedDets = DETERMINERS.slice().sort((a, b) => b.words.length - a.words.length);
+    const combinedSource = sortedDets.map(d => '\\b' + d.words.join('\\s+') + '\\b').join('|');
+    const combinedRe = new RegExp('(' + combinedSource + ')', 'gi');
+    const highlighted = escapeHtml(paragraph).replace(combinedRe, '<mark>$1</mark>');
+    return { found, pass: found.length >= 5, highlighted };
+  }
+
+  /* ---------------- ENDING SCREEN ---------------- */
+  function renderEnding() {
+    let tier = '⭐ Grammar Helper';
+    if (state.stars >= 40) tier = '⭐⭐⭐⭐ Determiner Master';
+    else if (state.stars >= 28) tier = '⭐⭐⭐ Party Planning Pro';
+    else if (state.stars >= 16) tier = '⭐⭐ Determiner Detective';
+
+    const confetti = [];
+    const emojis = ['🎈', '🎉', '✨', '🎊', '🍬'];
+    for (let i = 0; i < 24; i++) {
+      const left = Math.random() * 100;
+      const delay = Math.random() * 1.4;
+      const dur = 2.6 + Math.random() * 1.6;
+      const emo = emojis[i % emojis.length];
+      confetti.push(`<span class="confetti-piece" style="left:${left}%;animation-delay:${delay}s;animation-duration:${dur}s;">${emo}</span>`);
+    }
+
+    return `
+    <div class="screen ending card">
+      ${confetti.join('')}
+      <h1 style="color:var(--magenta);font-size:2rem;">🎉 THE PARTY IS READY! 🎉</h1>
+      <div class="title-tier">${tier}</div>
+      <div class="end-stats">
+        <div class="mission-stat"><div class="big">⭐ ${state.stars}</div><div class="lab">Grammar Stars</div></div>
+        <div class="mission-stat"><div class="big">RM${state.budget}</div><div class="lab">Money Left</div></div>
+        <div class="mission-stat"><div class="big">${state.basket.length}</div><div class="lab">Items Purchased</div></div>
+        <div class="mission-stat"><div class="big">${(state.writingAnalysis && state.writingAnalysis.found.length) || 0}</div><div class="lab">Determiners Mastered</div></div>
+      </div>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="btn" data-action="playAgain">Play Again 🔄</button>
+        <button class="btn secondary" data-action="tryHarder">Try a Harder Level →</button>
+      </div>
+    </div>`;
+  }
+
+  /* ---------------- ACTIONS ---------------- */
+  function attachGlobalHandlers() {
+    app.querySelectorAll('[data-action]').forEach(el => {
+      el.onclick = handleAction;
+    });
+    document.querySelectorAll('#situation-overlay [data-action]').forEach(el => {
+      el.onclick = handleAction;
+    });
+    const overlay = document.getElementById('situation-overlay');
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) { closeSituation(); }
+      });
+    }
+  }
+
+  function handleAction(e) {
+    const action = e.currentTarget.getAttribute('data-action');
+    if (action === 'setLevel') {
+      state.level = parseInt(e.currentTarget.getAttribute('data-level'), 10);
+      render();
+    } else if (action === 'startShopping') {
+      state.screen = 'shop';
+      render();
+    } else if (action === 'setArea') {
+      state.currentArea = e.currentTarget.getAttribute('data-area');
+      render();
+    } else if (action === 'openItem') {
+      openItem(e.currentTarget.getAttribute('data-item'));
+    } else if (action === 'closeSituation') {
+      closeSituation();
+    } else if (action === 'showHint') {
+      showHint();
+    } else if (action === 'selectOption') {
+      selectOption(e.currentTarget.getAttribute('data-idx'));
+    } else if (action === 'selectDualOption') {
+      selectDualOption(e.currentTarget.getAttribute('data-part'), e.currentTarget.getAttribute('data-idx'));
+    } else if (action === 'checkDualAnswer') {
+      checkDualAnswer();
+    } else if (action === 'checkParty') {
+      state.screen = 'party-prep';
+      render();
+    } else if (action === 'backToShop') {
+      state.screen = 'shop';
+      render();
+    } else if (action === 'goToWriting') {
+      state.screen = 'final-writing';
+      render();
+    } else if (action === 'checkFinalWriting') {
+      checkFinalWriting();
+    } else if (action === 'goToEnding') {
+      state.screen = 'ending';
+      render();
+    } else if (action === 'playAgain') {
+      resetGame(state.level);
+    } else if (action === 'tryHarder') {
+      resetGame(Math.min(3, state.level + 1));
+    }
+  }
+
+  function resetGame(level) {
+    state.screen = 'intro';
+    state.level = level;
+    state.budget = 100;
+    state.stars = 0;
+    state.basket = [];
+    state.purchaseCounts = {};
+    state.currentArea = 'cake';
+    state.usedSituations = {};
+    state.activeSituation = null;
+    state.activeItem = null;
+    state.attempts = 0;
+    state.hintLevel = 0;
+    state.lastFeedback = null;
+    state.wrongIndices = [];
+    state.mcqOptionsShuffled = null;
+    state.dualOptions1 = null;
+    state.dualOptions2 = null;
+    state.dualSelected1 = null;
+    state.dualSelected2 = null;
+    state.lastPickedIdx = null;
+    state.finalParagraph = '';
+    state.writingAnalysis = null;
+    render();
+  }
+
+  /* ---------------- UTILITIES ---------------- */
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function escapeHtml(s) {
+    return (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function mdBold(s) {
+    return (s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
